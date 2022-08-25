@@ -2,12 +2,20 @@ import express from 'express';
 
 const server = express();
 
-server.get('/sign-up', (req, res) => {
-  
-  res.send(forecast);
+server.use(express.json())
+
+const users = [];
+
+const tweets = [];
+
+server.post('/sign-up', (req, res) => {
+
+  users.push(req.body);
+
+  res.send('OK');
 
 });
 
 server.listen(5000, () => {
-  console.log(' Listening 5000');
+  console.log('Listening on 5000');
 });

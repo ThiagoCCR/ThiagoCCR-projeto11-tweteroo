@@ -48,6 +48,18 @@ server.get("/tweets", (req, res) => {
   res.send(tweetsData);
 });
 
+server.get("/tweets/:name", (req, res) => {
+  const urlName = req.params.name;
+  const tweetsData = tweets.filter((val) => val.username === urlName);
+
+  tweetsData.forEach((val) => {
+    const User = users.find((elem) => elem.username === val.username);
+    val.avatar = User.avatar;
+  });
+
+  res.send(tweetsData);
+});
+
 server.listen(5000, () => {
   console.log("Listening on 5000");
 });

@@ -1,8 +1,11 @@
 import express from 'express';
+import cors from 'cors';
 
 const server = express();
 
-server.use(express.json())
+server.use(express.json());
+
+server.use(cors());
 
 const users = [];
 
@@ -28,10 +31,11 @@ server.get('/tweets', (req, res) => {
 
   const tweetsData = tweets.filter((val,index)=> index < 10) 
 
+
   tweetsData.forEach((val)=>{
-      const User = users.filter((res)=> res.username === val.username);
-      const newDeliver = {...val, avatar: User.avatar};
-      return newDeliver
+      const User = users.find((elem)=> elem.username === val.username);
+      console.log(User)
+      val.avatar = User.avatar;
   })
 
   res.send(tweetsData);

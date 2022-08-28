@@ -18,22 +18,22 @@ function validateURL(textval) {
 }
 
 server.post("/sign-up", (req, res) => {
-  if (req.body.username === undefined || req.body.tweet === undefined) {
-    res.sendStatus(400).send("“Todos os campos são obrigatórios!”");
+  if (req.body.username === undefined || req.body.avatar === undefined) {
+    return res.status(400).send("“Todos os campos são obrigatórios!”");
   } else if (validateURL(req.body.avatar) === false) {
-    res.sendStatus(400).send("O Avatar tem que ser uma URL");
+    return res.status(400).send("O Avatar tem que ser uma URL");
   } else {
     users.push(req.body);
-    res.sendStatus(201).send("OK");
+    res.sendStatus(201);
   }
 });
 
 server.post("/tweets", (req, res) => {
   if (req.body.username === undefined || req.body.tweet === undefined) {
-    res.sendStatus(400).send("“Todos os campos são obrigatórios!”");
+    return res.status(400).send("“Todos os campos são obrigatórios!”");
   } else {
     tweets.push(req.body);
-    res.sendStatus(201).send("OK");
+    res.sendStatus(201);
   }
 });
 

@@ -13,21 +13,21 @@ const tweets = [];
 
 function validateURL(textval) {
   var urlregex =
-    /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+    /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|html|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
   return urlregex.test(textval);
 }
 
 server.post("/sign-up", (req, res) => {
-  const { user } = req.body;
+  const { username } = req.body;
   const { avatar } = req.body;
 
-  if (!user || !avatar) {
+  if (!username || !avatar) {
     return res.status(400).send("Todos os campos são obrigatórios!");
   } else if (validateURL(avatar) === false) {
     return res.status(400).send("O Avatar tem que ser uma URL");
   } else {
-    users.push(req.body);
-    res.sendStatus(201);
+    users.push({username, avatar});
+    res.send(tweets)
   }
 });
 
@@ -38,7 +38,7 @@ server.post("/tweets", (req, res) => {
   if (!user || !tweet) {
     return res.status(400).send("Todos os campos são obrigatórios!");
   } else {
-    tweets.push(req.body);
+    tweets.push({username:user, tweet});
     res.sendStatus(201);
   }
 });
@@ -47,7 +47,7 @@ server.get("/tweets", (req, res) => {
   const tweetsData = [];
 
   for (let i = tweets.length - 1; i > 0; i--) {
-    if (tweetsData.length < 11) {
+    if (tweetsData.length < 10) {
       tweetsData.push(tweets[i]);
     }
   }

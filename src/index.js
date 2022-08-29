@@ -18,9 +18,12 @@ function validateURL(textval) {
 }
 
 server.post("/sign-up", (req, res) => {
-  if (req.body.username === undefined || req.body.avatar === undefined) {
-    return res.status(400).send("“Todos os campos são obrigatórios!”");
-  } else if (validateURL(req.body.avatar) === false) {
+  const { user } = req.body;
+  const { avatar } = req.body;
+
+  if (!user || !avatar) {
+    return res.status(400).send("Todos os campos são obrigatórios!");
+  } else if (validateURL(avatar) === false) {
     return res.status(400).send("O Avatar tem que ser uma URL");
   } else {
     users.push(req.body);
@@ -29,8 +32,11 @@ server.post("/sign-up", (req, res) => {
 });
 
 server.post("/tweets", (req, res) => {
-  if (req.body.username === undefined || req.body.tweet === undefined) {
-    return res.status(400).send("“Todos os campos são obrigatórios!”");
+  const user = req.headers.user;
+  const { tweet } = req.body;
+
+  if (!user || !tweet) {
+    return res.status(400).send("Todos os campos são obrigatórios!");
   } else {
     tweets.push(req.body);
     res.sendStatus(201);
@@ -38,7 +44,15 @@ server.post("/tweets", (req, res) => {
 });
 
 server.get("/tweets", (req, res) => {
-  const tweetsData = tweets.filter((val, index) => index < 10);
+  const tweetsData = [];
+
+  for (let i = tweets.length - 1; i > 0; i--) {
+    if (tweetsData.length < 11) {
+      tweetsData.push(tweets[i]);
+    }
+  }
+
+  tweetsData.reverse();
 
   tweetsData.forEach((val) => {
     const User = users.find((elem) => elem.username === val.username);
